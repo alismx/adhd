@@ -24,16 +24,16 @@ Built on the [Claude Agent SDK](https://docs.claude.com/en/api/agent-sdk). Ships
 ## Install
 
 ```bash
-# while in development, from source:
-git clone https://github.com/UditAkhourii/adhd.git
-cd adhd
-npm install
-npm run build
+# CLI (global):
+npm install -g adhd-agent
+adhd "design a rate limiter that survives a leader election"
 
-# once published to npm:
-npm install -g adhd-agent     # global CLI
-# or
-npm install adhd-agent        # library
+# library:
+npm install adhd-agent
+
+# or from source:
+git clone https://github.com/UditAkhourii/adhd.git
+cd adhd && npm install && npm run build
 ```
 
 Auth: ADHD uses the Claude Agent SDK, which picks up `ANTHROPIC_API_KEY` from the environment, or inherits auth from a local Claude Code install.
