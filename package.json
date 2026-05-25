@@ -41,11 +41,11 @@
   "author": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourhandle/adhd.git"
+    "url": "git+https://github.com/UditAkhourii/adhd.git"
   },
-  "homepage": "https://github.com/yourhandle/adhd#readme",
+  "homepage": "https://github.com/UditAkhourii/adhd#readme",
   "bugs": {
-    "url": "https://github.com/yourhandle/adhd/issues"
+    "url": "https://github.com/UditAkhourii/adhd/issues"
   },
   "engines": {
     "node": ">=18"

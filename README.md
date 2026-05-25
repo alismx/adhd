@@ -16,7 +16,7 @@ Built on the [Claude Agent SDK](https://docs.claude.com/en/api/agent-sdk). Ships
 
 ```bash
 # while in development, from source:
-git clone https://github.com/yourhandle/adhd.git
+git clone https://github.com/UditAkhourii/adhd.git
 cd adhd
 npm install
 npm run build
