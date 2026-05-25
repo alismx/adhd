@@ -272,7 +272,7 @@
 
 <p>Each phase uses a system prompt tuned for its posture. Divergence prompts begin with <em>"You are in DIVERGENT mode. You are a generator, not a critic"</em> and enumerate constraints (JSON only, no prose, no ranking, the first three obvious answers are banned, push past them). The scoring prompt begins with <em>"You are in CONVERGENT mode. You are now the critic"</em> and supplies the rubric. The deepen prompt begins with <em>"You are in FOCUS mode"</em>. These prompts are designed to be self-evidently incompatible, so the model cannot drift between them within a single call.</p>
 
-<p>The implementation is roughly 600 lines of TypeScript and is released under MIT licence at <a href="https://github.com/UditAkhourii/adhd">github.com/UditAkhourii/adhd</a>.</p>
+<p>The implementation is roughly 600 lines of TypeScript and is released under MIT licence at <a href="https://github.com/UditAkhourii/adhd">github.com/UditAkhourii/adhd</a>. The package is published to npm as <a href="https://www.npmjs.com/package/adhd-agent"><code>adhd-agent</code></a> and is installable with <code>npm install adhd-agent</code> (library) or <code>npm install -g adhd-agent</code> (CLI binary <code>adhd</code>).</p>
 
 <h2 id="eval">Evaluation</h2>
 
