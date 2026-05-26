@@ -7,7 +7,6 @@
 # ADHD — a skill for agents
 
 [![CI](https://github.com/UditAkhourii/adhd/actions/workflows/ci.yml/badge.svg)](https://github.com/UditAkhourii/adhd/actions/workflows/ci.yml)
-[![Evals](https://github.com/UditAkhourii/adhd/actions/workflows/evals.yml/badge.svg)](https://github.com/UditAkhourii/adhd/actions/workflows/evals.yml)
 [![npm](https://img.shields.io/npm/v/adhd-agent.svg)](https://www.npmjs.com/package/adhd-agent)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](#install)
@@ -386,7 +385,7 @@ npm run evals -- --problem lru-100ms   # one specific problem
 
 Output: [`EVALS.md`](./EVALS.md) (human-readable verdicts + aggregate table) and `bench/results.json` (full transcripts).
 
-The GitHub Actions [Evals workflow](./.github/workflows/evals.yml) runs the same suite on demand; results are uploaded as artifacts and `EVALS.md` is committed back to `main`.
+The GitHub Actions [Evals workflow](./.github/workflows/evals.yml) can run the same suite on demand if you set an `ANTHROPIC_API_KEY` secret on the repo. Results upload as artifacts and `EVALS.md` is committed back to `main`. The committed `EVALS.md` in the repo today is from a local run.
 
 Adding a new problem is a 4-line change to [`bench/problems.json`](./bench/problems.json) — see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
