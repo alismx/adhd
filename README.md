@@ -23,86 +23,61 @@ Like Steve Jobs' *connecting the dots* — but the dots get generated under deli
 
 It is the no-brainer skill to reach for on **creative work, interdisciplinary work, design decisions, fuzzy debugging, naming, API surface design, strategy, positioning, and any prompt of the shape *"give me a few ways to…"***.
 
-Ships three ways: as a **Claude Code skill** ([SKILL.md](./SKILL.md), drop-in, no install required), as a **Node/TS library** ([`adhd-agent`](https://www.npmjs.com/package/adhd-agent) on npm), and as a **CLI** (`adhd "your problem here"`). The library and CLI are built on the [Claude Agent SDK](https://docs.claude.com/en/api/agent-sdk).
+Ships three ways: as an **agent skill** ([`skills/adhd/SKILL.md`](./skills/adhd/SKILL.md), drop-in via `npx skills add UditAkhourii/adhd`, works in Claude Code, Cursor, Antigravity, Codex, and ~50 more), as a **Node/TS library** ([`adhd-agent`](https://www.npmjs.com/package/adhd-agent) on npm), and as a **CLI** (`adhd "your problem here"`). The library and CLI are built on the [Claude Agent SDK](https://docs.claude.com/en/api/agent-sdk).
 
 ---
 
 ## Install
 
-ADHD ships three ways. Pick the one that fits how you work.
-
-| Surface | Install method | Cost |
-|---|---|---|
-| **Claude Code, Claude.ai, Antigravity, Cursor, any agent** | drop SKILL.md into the agent's skill or rules directory | zero npm, zero API key beyond existing auth |
-| **Terminal CLI** | `npm install -g adhd-agent` | needs Node 18+ and an Anthropic API key |
-| **Library inside your own agent** | `npm install adhd-agent` | needs Node 18+ and an Anthropic API key |
-
-### As a skill (no install, no npm)
-
-The same [`SKILL.md`](./SKILL.md) file works across every agent that reads markdown skills or instruction files. The body of the file tells Claude to use its native parallel-subagent tool to spawn isolated divergence branches, score them, and deepen the top survivors. Same loop as the library.
-
-**Claude Code** (`~/.claude/`)
+### One command, every agent
 
 ```bash
+npx skills add UditAkhourii/adhd
+```
+
+That is it. The [`skills`](https://github.com/vercel-labs/skills) CLI detects which agent you are using and drops [`skills/adhd/SKILL.md`](./skills/adhd/SKILL.md) into the right place. Supports **Claude Code, Claude.ai, Antigravity, Cursor, Codex, Cline, Continue, Aider, Gemini CLI, Windsurf, Cody, Roo, Augment, OpenCode, Kilo, Kimi, Qwen, Trae, Replit, Warp**, and ~40 more.
+
+Restart your agent. The skill auto-triggers on brainstorm, ideate, design, naming, refactor, and "give me a few ways to" intents. Or invoke it explicitly: `/adhd "design a rate limiter that survives a leader election"`.
+
+Useful flags:
+
+```bash
+npx skills add UditAkhourii/adhd -g            # install globally instead of per-project
+npx skills add UditAkhourii/adhd -a claude-code -a cursor   # target specific agents
+npx skills add UditAkhourii/adhd --copy        # copy files instead of symlinking
+npx skills add UditAkhourii/adhd --list        # see what skills the repo offers
+```
+
+### Manual install (if you do not have npx)
+
+The skill file is at [`skills/adhd/SKILL.md`](./skills/adhd/SKILL.md). Curl it into your agent's skill directory:
+
+```bash
+# Claude Code (global)
 mkdir -p ~/.claude/skills/adhd
-curl -fsSL https://raw.githubusercontent.com/UditAkhourii/adhd/main/SKILL.md \
+curl -fsSL https://raw.githubusercontent.com/UditAkhourii/adhd/main/skills/adhd/SKILL.md \
   -o ~/.claude/skills/adhd/SKILL.md
-```
 
-Restart Claude Code. The skill auto-triggers on brainstorm, ideate, design, naming, and "give me a few ways to" intents, or invoke it explicitly:
-
-```
-/adhd design a rate limiter that survives a leader election
-```
-
-**Claude Code per-project**
-
-If you want the skill scoped to one repo only, drop it under `.claude/skills/` in the repo root instead:
-
-```bash
+# Claude Code (per-project)
 mkdir -p .claude/skills/adhd
-curl -fsSL https://raw.githubusercontent.com/UditAkhourii/adhd/main/SKILL.md \
+curl -fsSL https://raw.githubusercontent.com/UditAkhourii/adhd/main/skills/adhd/SKILL.md \
   -o .claude/skills/adhd/SKILL.md
+
+# Cursor (project rules)
+curl -fsSL https://raw.githubusercontent.com/UditAkhourii/adhd/main/skills/adhd/SKILL.md >> .cursorrules
 ```
 
-**Claude.ai (web and desktop)**
+For **Claude.ai web/desktop**: open project settings → **Skills** → **Add skill** → upload [`skills/adhd/SKILL.md`](./skills/adhd/SKILL.md).
 
-Open the project settings → **Skills** → **Add skill** → upload [`SKILL.md`](./SKILL.md). Available to every conversation in that project.
+For **Cline, Continue, Aider, Roo Code, and other agents**: paste the body of [`SKILL.md`](./skills/adhd/SKILL.md) (skip the YAML frontmatter) into your agent's system prompt or rules field.
 
-**Antigravity (Google)**
-
-Antigravity reads agent instructions from `.antigravity/agents/` (or your project's agent config). Save the SKILL.md body as a custom agent instruction file:
-
-```bash
-mkdir -p .antigravity/agents
-curl -fsSL https://raw.githubusercontent.com/UditAkhourii/adhd/main/SKILL.md \
-  -o .antigravity/agents/adhd.md
-```
-
-Reference it from your agent config or invoke it inline. The SKILL.md body is model-agnostic: it instructs the agent to use whatever parallel-task tool it has. Works with Gemini-powered Antigravity sessions out of the box.
-
-**Cursor**
-
-Cursor uses `.cursorrules` per repo or **Custom Modes** in the IDE. Either:
-
-```bash
-# project rules
-curl -fsSL https://raw.githubusercontent.com/UditAkhourii/adhd/main/SKILL.md >> .cursorrules
-```
-
-Or paste the SKILL.md body into **Settings → Custom Modes → New Mode → System prompt**, name it "ADHD".
-
-**Cline, Continue, Aider, Roo Code, and other agents**
-
-Most agents accept a custom system prompt or rule file. Paste the body of [`SKILL.md`](./SKILL.md) (skip the YAML frontmatter) into your agent's system prompt or rules field. The loop is described in plain instructions that any tool-using agent can execute.
-
-**Anthropic Claude Agent SDK (programmatic)**
+### Programmatic install (Agent SDK)
 
 ```ts
 import { query } from "@anthropic-ai/claude-agent-sdk";
 import { readFileSync } from "node:fs";
 
-const skill = readFileSync("./SKILL.md", "utf8");
+const skill = readFileSync("./skills/adhd/SKILL.md", "utf8");
 
 for await (const m of query({
   prompt: "design a retry strategy for a CLI whose LLM hangs for 90s",
@@ -115,7 +90,7 @@ for await (const m of query({
 }
 ```
 
-### As a CLI
+### As a CLI (terminal usage, no agent needed)
 
 ```bash
 npm install -g adhd-agent
@@ -124,7 +99,7 @@ adhd "design a rate limiter that survives a leader election"
 
 Auth: picks up `ANTHROPIC_API_KEY` from the environment, or inherits auth from a local Claude Code install.
 
-### As a library
+### As a library (inside your own agent)
 
 ```bash
 npm install adhd-agent
@@ -436,4 +411,4 @@ MIT.
 
 ## Credits
 
-ADHD operationalizes the *Divergent Ideation* source spec — see [SOURCE-SPEC.md](./SOURCE-SPEC.md) for the original prose. The runnable skill is at [SKILL.md](./SKILL.md).
+ADHD operationalizes the *Divergent Ideation* source spec — see [SOURCE-SPEC.md](./SOURCE-SPEC.md) for the original prose. The runnable skill is at [`skills/adhd/SKILL.md`](./skills/adhd/SKILL.md).
