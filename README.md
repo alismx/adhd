@@ -294,7 +294,7 @@ Edit [`src/frames.ts`](./src/frames.ts) to add your own. A frame is 5 lines.
 
 Honest numbers. A default run is roughly:
 
-- N parallel divergence calls (default 5)
+- N parallel divergence calls (default 5 but can be increased to n=infinity)
 - 1 scoring call
 - 1 clustering call
 - K deepen calls (default 3)
