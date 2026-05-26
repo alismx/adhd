@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://adhdstack.github.io/">
+    <img src="docs/hero.png" alt="ADHD for Claude Code" width="100%">
+  </a>
+</p>
+
 # ADHD — a skill for agents
 
 [![CI](https://github.com/UditAkhourii/adhd/actions/workflows/ci.yml/badge.svg)](https://github.com/UditAkhourii/adhd/actions/workflows/ci.yml)
