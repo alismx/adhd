@@ -12,11 +12,12 @@
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](#install)
 [![Paper](https://img.shields.io/badge/paper-preprint-blueviolet)](https://adhdstack.github.io/)
 
-> **Stop your agent from picking the first answer.**
+> **An architectural fix for premature convergence in autoregressive reasoning.**
 
-📄 **Read the preprint:** [ADHD: Parallel Divergent Ideation for Coding Agents](https://adhdstack.github.io/)
+📄 **Preprint:** [ADHD: Parallel Divergent Ideation for Coding Agents](https://adhdstack.github.io/)
+👤 **Author:** Udit Akhouri — [@akhouriudit](https://x.com/akhouriudit) · [LinkedIn](https://www.linkedin.com/in/udit-akhouri-10160a168/) · researchudit@gmail.com
 
-ADHD is a drop-in skill and library that makes coding agents think *wide before deep*. It fans out many parallel divergent thoughts under deliberately different cognitive frames (regulator, speedrunner, ant colony, 3am on-call, $0 budget, infinite budget), scores every leaf, prunes the traps, and **deepens only the survivors**.
+Linear Chain-of-Thought gets trapped in local minima: each generated token conditions the next, so the model anchors on whatever it said first. Tree-of-Thought widens the search but still walks a single shared context, so anchoring persists across branches. **ADHD treats this as an architectural problem, not a prompting one** — it spawns N isolated reasoning processes under deliberately distorted cognitive frames, with zero shared context during divergence, then runs a separate critic pass to score, cluster, prune traps, and deepen survivors.
 
 Like Steve Jobs' *connecting the dots* — but the dots get generated under deliberate cognitive distortion first, in parallel, with the critic switched off, before any of them are evaluated.
 
@@ -188,6 +189,50 @@ Output:
 - the trap list, each trap with the reason it's a trap
 - the deepened branches — the "connected dots"
 - one provocation (a wildcard question)
+
+---
+
+## Architecture — how parallel divergence works under the hood
+
+For researchers and infra folks: the mechanism, not the metaphor.
+
+### Context-window management
+
+Each divergent branch is its own `query()` call against the [Claude Agent SDK](https://docs.claude.com/en/api/agent-sdk) — a fresh, **stateless session** with no shared KV-cache, no shared message history, no shared system prompt beyond the `claude_code` preset. The only tokens that enter a branch are:
+
+```
+system  = preset + frame_vantage_prompt + "forbid evaluation/ranking/hedging, JSON array out"
+user    = problem + optional_context
+```
+
+Token cost scales **linearly** in branches (`O(N × per_branch)`), not quadratically — there's no broadcast of prior branches into later ones. The "ADHD" fan-out is true concurrent inference, not interleaved decoding on a shared trajectory. See [`src/llm.ts`](./src/llm.ts) and [`src/diverge.ts`](./src/diverge.ts).
+
+### Pruning & convergence criteria
+
+Convergence is a **separate LLM call** with an inverted system prompt (critic posture, evaluation mandatory). It performs three structured passes — see [`src/score.ts`](./src/score.ts), [`src/cluster.ts`](./src/cluster.ts), [`src/deepen.ts`](./src/deepen.ts):
+
+1. **Score** — every leaf scored on `novelty / viability / fit` (0–10 each), structured JSON. Traps tagged with a mechanistic reason (e.g. *"shelve isn't thread-safe under multi-writer load"*), not a vague risk label.
+2. **Cluster** — angle-level grouping ("remove-the-server plays", "cache-shaped plays"), not surface-keyword clustering. Surfaces the *shape* of the design space.
+3. **Deepen top-K** — for the K highest combined-score non-trap leaves, generate: sketch, load-bearing risk, first concrete step, 3–5 child ideas (variations / hybrids / unlocks).
+
+No heuristic threshold and no logit-bias steering. The critic's structured output is the pruning decision. Default `K=3`; the `nonObviousPick` field surfaces the highest-novelty viable leaf even if it's not the highest-fit.
+
+### Routing & orchestration
+
+Multi-agent orchestration via parallel `query()` calls, gated by a configurable semaphore (`concurrency`, default 4). Frame selection (see [`src/frames.ts`](./src/frames.ts)) is deterministic per-seed with a `codeMode` bias toward engineering vantage points. Each frame is a **system-prompt payload** that re-poses the entire question — *"re-ask this as a hardware problem"*, *"re-ask this as a regulator"*, *"re-ask this as a 10-year-old"* — not a logit-level intervention.
+
+```ts
+// the load-bearing call shape — bench/run-evals.ts and src/diverge.ts
+const branches = await Promise.all(
+  frames.map(frame => withSemaphore(concurrency, () => callLLM({
+    systemPrompt: `${frame.vantage}\n\nFORBIDDEN: evaluation, ranking, hedging. JSON array out.`,
+    userPrompt:   `${problem}\n\n${context ?? ""}`,
+  })))
+);
+// branches[i] never sees branches[j] during divergence — by construction.
+```
+
+The generator-critic split is **mechanical** (different API calls, different system prompts) rather than promised in-prompt to the same session. This is the load-bearing design choice that distinguishes ADHD from in-context ToT.
 
 ---
 
@@ -435,3 +480,17 @@ MIT License.
 ## Credits
 
 ADHD operationalizes the *Divergent Ideation* source spec — see [SOURCE-SPEC.md](./SOURCE-SPEC.md) for the original prose. The runnable skill is at [`skills/adhd/SKILL.md`](./skills/adhd/SKILL.md).
+
+---
+
+## Contact
+
+**Udit Akhouri** — author of the preprint and maintainer of this repo.
+
+- 📄 Preprint: [adhdstack.github.io](https://adhdstack.github.io/)
+- 🐦 X / Twitter: [@akhouriudit](https://x.com/akhouriudit)
+- 💼 LinkedIn: [udit-akhouri](https://www.linkedin.com/in/udit-akhouri-10160a168/)
+- ✉️  Email: [researchudit@gmail.com](mailto:researchudit@gmail.com)
+- 🐙 GitHub: [@UditAkhourii](https://github.com/UditAkhourii)
+
+Open to collaboration with research labs and applied-AI teams working on reasoning, planning, and agentic systems.
