@@ -1,0 +1,52 @@
+name: Star History snapshot
+
+# Snapshots the star-history.com chart into docs/star-history.svg on every
+# push to main, plus an hourly cron in case no commits happen for a while.
+# The README references the static file, so the chart is as fresh as the
+# latest commit (or, at worst, the last cron tick).
+#
+# The commit message contains "[skip ci]" so the CI workflow does not run
+# on the bot's snapshot commits and we avoid a recursion loop.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 * * * *"   # every hour
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: star-history-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Fetch latest star history SVG
+        run: |
+          mkdir -p docs
+          curl -fsSL --retry 3 --retry-delay 5 \
+            "https://api.star-history.com/svg?repos=UditAkhourii/adhd&type=Date" \
+            -o docs/star-history.svg
+          test -s docs/star-history.svg
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet docs/star-history.svg; then
+            echo "No change in chart, skipping commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/star-history.svg
+          git commit -m "chore(star-history): snapshot refresh [skip ci]"
+          git push

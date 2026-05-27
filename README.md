@@ -476,10 +476,10 @@ Adding a new problem is a 4-line change to [`bench/problems.json`](./bench/probl
 </p>
 
 <a href="https://www.star-history.com/#UditAkhourii/adhd&Date">
-  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=UditAkhourii/adhd&type=Date" />
+  <img alt="Star History Chart" src="docs/star-history.svg" />
 </a>
 
-<sub>Live counters update within ~5 minutes via shields.io CDN. The history chart above is rendered by star-history.com which caches results every few hours, so the trend lags the live counter slightly.</sub>
+<sub>Counters update within ~5 minutes via shields.io CDN. The history chart is snapshotted by a GitHub Action on every push and on an hourly cron, so it stays current with the repo state.</sub>
 
 ---
 
