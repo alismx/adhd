@@ -465,21 +465,13 @@ Adding a new problem is a 4-line change to [`bench/problems.json`](./bench/probl
 
 ## Star History
 
-<p>
-  <a href="https://github.com/UditAkhourii/adhd/stargazers">
-    <img alt="GitHub stars (live)" src="https://img.shields.io/github/stars/UditAkhourii/adhd?style=for-the-badge&logo=github&label=stars%20%E2%9A%A1%20live&color=blue">
-  </a>
-  &nbsp;
-  <a href="https://github.com/UditAkhourii/adhd/network/members">
-    <img alt="GitHub forks (live)" src="https://img.shields.io/github/forks/UditAkhourii/adhd?style=for-the-badge&logo=github&label=forks&color=blue">
-  </a>
-</p>
-
-<a href="https://www.star-history.com/#UditAkhourii/adhd&Date">
-  <img alt="Star History Chart" src="docs/star-history.svg" />
+<a href="https://www.star-history.com/?repos=uditakhourii%2Fadhd&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=uditakhourii/adhd&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=uditakhourii/adhd&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=uditakhourii/adhd&type=date&legend=top-left" />
+ </picture>
 </a>
-
-<sub>Live counters update within ~5 minutes via shields.io CDN. The history chart is generated directly from the GitHub Stargazers API by a GitHub Action that runs on every push to <code>main</code> and on an hourly cron — no third-party caching layer, no rendering lag.</sub>
 
 ---
 
