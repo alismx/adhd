@@ -1,12 +1,11 @@
 name: Star History snapshot
 
-# Snapshots the star-history.com chart into docs/star-history.svg on every
-# push to main, plus an hourly cron in case no commits happen for a while.
-# The README references the static file, so the chart is as fresh as the
-# latest commit (or, at worst, the last cron tick).
+# Builds docs/star-history.svg directly from the GitHub Stargazers API
+# (no third-party caching layer). Runs on every push to main plus an
+# hourly cron, so the chart is always as fresh as the last workflow run.
 #
-# The commit message contains "[skip ci]" so the CI workflow does not run
-# on the bot's snapshot commits and we avoid a recursion loop.
+# Commits are tagged with [skip ci] to avoid re-triggering the CI workflow
+# on the bot's own snapshot commits.
 
 on:
   push:
@@ -31,13 +30,15 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Fetch latest star history SVG
-        run: |
-          mkdir -p docs
-          curl -fsSL --retry 3 --retry-delay 5 \
-            "https://api.star-history.com/svg?repos=UditAkhourii/adhd&type=Date" \
-            -o docs/star-history.svg
-          test -s docs/star-history.svg
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build star history SVG from GitHub API
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/build-star-chart.mjs
 
       - name: Commit and push if changed
         run: |

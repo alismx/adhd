@@ -479,7 +479,7 @@ Adding a new problem is a 4-line change to [`bench/problems.json`](./bench/probl
   <img alt="Star History Chart" src="docs/star-history.svg" />
 </a>
 
-<sub>Counters update within ~5 minutes via shields.io CDN. The history chart is snapshotted by a GitHub Action on every push and on an hourly cron, so it stays current with the repo state.</sub>
+<sub>Live counters update within ~5 minutes via shields.io CDN. The history chart is generated directly from the GitHub Stargazers API by a GitHub Action that runs on every push to <code>main</code> and on an hourly cron — no third-party caching layer, no rendering lag.</sub>
 
 ---
 
