@@ -58,7 +58,27 @@ One command, auto-detects your agent (Claude Code, Cursor, Antigravity, Codex, C
 npx skills add UditAkhourii/adhd
 ```
 
-Then invoke explicitly with `/adhd "your problem"`, or let it auto-trigger on ideation intents. CLI and library installs, manual curl, and per-platform paths are in **[documentation/install.md](./documentation/install.md)**.
+Then invoke explicitly with `/adhd "your problem"`, or let it auto-trigger on ideation intents.
+
+### Codex quick path
+
+If the universal command above fails to register inside Codex (some Codex builds discover skills from a specific path), force the target:
+
+```bash
+npx skills add UditAkhourii/adhd -a codex -g
+```
+
+Or install manually into Codex's skills directory:
+
+```bash
+mkdir -p ~/.codex/skills/adhd
+curl -fsSL https://raw.githubusercontent.com/UditAkhourii/adhd/main/skills/adhd/SKILL.md \
+  -o ~/.codex/skills/adhd/SKILL.md
+```
+
+Restart Codex. `/adhd "design a rate limiter"` should now route through the skill. The skill ships with a single-line description (≤600 chars) specifically because some Codex builds truncate or reject multi-line YAML block descriptions.
+
+CLI and library installs, manual curl for other agents, and per-platform paths are in **[documentation/install.md](./documentation/install.md)**.
 
 ```bash
 npm install -g adhd-agent     # CLI

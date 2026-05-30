@@ -1,36 +1,7 @@
 ---
 name: adhd
-description: >
-  Parallel divergent ideation for coding agents. Spawns N isolated branches
-  under different cognitive frames (regulator, biology, speedrunner, 10 year
-  old, $0 budget), scores, prunes traps, and deepens the top survivors. The
-  isolated parallel branches and the separated generator/critic phases are
-  load-bearing. Costs about 10 LLM/Agent calls per run (5 to 10x a single
-  answer) so invocation is gated.
-
-  UNCONDITIONAL TRIGGER. When the user types "/adhd" or explicitly asks for
-  "ADHD mode", "use the adhd skill", or "run ADHD on this", invoke the full
-  loop without further judgment. Skip the pre-flight check.
-
-  CONDITIONAL TRIGGER. For everything else, self-judge before invoking.
-  Only proceed when ALL of these hold:
-  (a) the answer space is OPEN-ENDED (multiple viable answers, no single
-      canonical correct one),
-  (b) the cost of the obvious answer being wrong is high (architecture
-      decision, fuzzy bug with no known root cause, API or SDK surface
-      design, naming for a public product, strategy, positioning, schema
-      design, migration planning), and
-  (c) the user has NOT used closed-phrasing words like "quick", "fast",
-      "standard", "canonical", "textbook", "just", "one-line", "show me how
-      to", "what is the syntax for".
-
-  DO NOT INVOKE for: factual lookups, syntax help, bugs with a known root
-  cause, anything where the right answer is one search query away, or
-  questions phrased as closed with a clear single answer.
-
-  When in doubt, do NOT auto-invoke. Prefer answering directly and offer the
-  user "/adhd <problem>" as an explicit option if you think the wide search
-  would help.
+description: Parallel divergent ideation for coding agents. Spawns N isolated branches under different cognitive frames (regulator, biology, speedrunner, 10-year-old, $0 budget), scores, clusters, prunes traps, and deepens top survivors. Use on /adhd, "ADHD mode", brainstorm/ideate intents, or open-ended design, architecture, naming, API/SDK surface, and fuzzy-debugging decisions. Skip for syntax, lookups, bugs with known root cause, or closed phrasing ("quick", "standard", "canonical", "textbook"). Full pre-flight gate is in the skill body.
+license: MIT
 ---
 
 # ADHD
