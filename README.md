@@ -32,6 +32,12 @@ Reach for it on **design decisions, fuzzy debugging, naming, API surface design,
 
 ---
 
+## Community
+
+👉 [**Join the ADHD community →**](https://tally.so/r/WO1Nzj) as a contributor, maintainer, early adopter, or just a member. One short form. We coordinate frame contributions, eval problems, integrations, and adopter onboarding there.
+
+---
+
 ## Early adopters
 
 Projects that officially ship or integrate ADHD:
